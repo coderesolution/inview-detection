@@ -1,0 +1,264 @@
+/**
+* HTML document & body
+*/
+html, body {
+	background: #012 url("data:image/svg+xml;charset=utf-8,%3Csvg width='8' height='8' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 0h1L0 6V5zm1 5v1H5z' fill='%23ffffff' fill-opacity='.075' fill-rule='evenodd'/%3E%3C/svg%3E") repeat top left / 8px;
+	background-attachment: fixed;
+	color: #fff;
+	font-family: -apple-system, linkMacSystemFont, Helvetica Neue, BlinkMacSystemFont, Segoe UI, Roboto, Roboto, Arial, sans-serif;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1em;
+	max-width: 100%;
+	min-height: 100%;
+	min-width: 320px;
+	overflow-x: hidden;
+	width: 100%;
+
+	/* Font smoothing */
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-stroke-width: 0.2px;
+	-moz-osx-font-smoothing: grayscale;
+
+}
+
+html {
+	scroll-behavior: initial;
+	min-height: 100%;
+	-ms-overflow-style: scrollbar;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+	&.is-loading,
+	&.is-leaving {
+		cursor: wait;
+	}
+
+}
+
+
+/**
+* Lenis
+*/
+html.lenis {
+	height: auto;
+
+	&.lenis-smooth { scroll-behavior: auto; }
+
+	&.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+
+	&.lenis-stopped { overflow: hidden; }
+
+	&.lenis-scrolling iframe { pointer-events: none; }
+
+}
+
+
+/***
+The new CSS reset - version 1.7.3 (last updated 7.8.2022)
+GitHub page: https://github.com/elad2412/the-new-css-reset
+***/
+
+/*
+Remove all the styles of the "User-Agent-Stylesheet", except for the 'display' property
+- The "symbol *" part is to solve Firefox SVG sprite bug
+ */
+*:where(:not(html, iframe, canvas, img, svg, video, audio, pre):not(svg *, symbol *)) {
+	all: unset;
+	display: revert;
+}
+
+/* Preferred box-sizing value */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+/* Reapply the pointer cursor for anchor tags */
+a, button {
+	cursor: revert;
+}
+
+/* Remove list styles (bullets/numbers) */
+ol, ul, menu {
+	list-style: none;
+}
+
+/* For images to not be able to exceed their container */
+img {
+	max-width: 100%;
+}
+
+/* removes spacing between cells in tables */
+table {
+	border-collapse: collapse;
+}
+
+/* Safari - solving issue when using user-select:none on the <body> text input doesn't working */
+input, textarea {
+	-webkit-user-select: auto;
+}
+
+/* revert the 'white-space' property for textarea elements on Safari */
+textarea {
+	white-space: revert;
+}
+
+/* minimum style to allow to style meter element */
+meter {
+	-webkit-appearance: revert;
+	appearance: revert;
+}
+
+/* reset default text opacity of input placeholder */
+::placeholder {
+	color: unset;
+}
+
+/* fix the feature of 'hidden' attribute.
+   display:revert; revert to element instead of attribute */
+:where([hidden]) {
+	display: none;
+}
+
+/* revert for bug in Chromium browsers
+   - fix for the content editable attribute will work properly.
+   - webkit-user-select: auto; added for Safari in case of using user-select:none on wrapper element*/
+:where([contenteditable]:not([contenteditable="false"])) {
+	-moz-user-modify: read-write;
+	-webkit-user-modify: read-write;
+	overflow-wrap: break-word;
+	-webkit-line-break: after-white-space;
+	-webkit-user-select: auto;
+}
+
+/* apply back the draggable feature - exist only in Chromium and Safari */
+:where([draggable="true"]) {
+	-webkit-user-drag: element;
+}
+
+
+/**
+* Demo
+*/
+.section {
+	align-items: center;
+	border-bottom: 1px dashed rgba(255,255,255,.5);
+	display: flex;
+	font-size: 0;
+	justify-content: center;
+	height: 100vh;
+	padding: 30px;
+	position: relative;
+	text-align: center;
+
+	.section_label {
+		background: rgba(255,255,255,.125);
+		border-radius: 0 0 5px 0;
+		left: 0;
+		padding: 10px 15px;
+		position: absolute;
+		top: 0;
+		text-align: left;
+	}
+
+		.label_heading {
+			display: block;
+			font-size: 16px;
+			line-height: 1em;
+		}
+
+		.label_description {
+			color: rgba(255,255,255,.6);
+			display: block;
+			font-size: 12px;
+			line-height: 1em;
+			margin-top: 5px;
+		}
+
+	.section_canvas {
+		align-items: stretch;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		width: 100%;
+	}
+
+		.boxes {
+			align-items: center;
+			display: flex;
+			flex-wrap: wrap;
+			grid-gap: 20px;
+			justify-content: center;
+			margin: auto;
+			width: 100%;
+		}
+
+			.box {
+				align-items: center;
+				background: #fff;
+				border-radius: 4px;
+				color: #000;
+				display: inline-flex;
+				font-size: 12px;
+				justify-content: center;
+				height: 140px;
+				padding: 8px;
+				text-align: center;
+				width: 140px;
+			}
+
+		.text {
+			align-items: center;
+			display: flex;
+			flex-wrap: wrap;
+			grid-gap: 20px;
+			justify-content: center;
+			margin: auto;
+			width: 100%;
+		}
+
+			.lines {
+				display: block;
+				font-size: 16px;
+				line-height: 1.45em;
+				margin: 0 auto;
+				max-width: 500px;
+			}
+
+				.lines p {
+					display: block;
+					margin: .5em 0;
+				}
+
+		.buttons {
+			align-items: center;
+			column-gap: 20px;
+			display: flex;
+			justify-content: center;
+		}
+
+			.buttons button {
+				background: #fff;
+				border-radius: 4px;
+				color: #000;
+				font-size: 16px;
+				line-height: 1em;
+				padding: .75em 1em;
+			}
+
+	&.-sequence .boxes,
+	&.-screens .boxes {
+		max-width: calc(calc(140px * 3) + calc(20px * 3));
+	}
+
+	&.-standalone .boxes { max-width: 140px; }
+
+	&.-wip .section_label { background: rgba(255,99,71,.75); }
+
+}
+
+
+
+
