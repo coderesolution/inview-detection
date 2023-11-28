@@ -44,7 +44,7 @@
 	"homepage": "https://github.com/coderesolution/inview-detection#readme",
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^11.0.0",
-		"eslint": "^8.53.0",
+		"eslint": "^8.54.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-config-standard": "^17.1.0",
 		"eslint-plugin-import": "^2.29.0",
@@ -55,8 +55,8 @@
 		"microbundle": "^0.15.1",
 		"npm-run-all": "^4.1.5",
 		"prettier": "^3.1.0",
-		"typescript": "^5.2.2",
-		"vite": "^4.5.0"
+		"typescript": "^5.3.2",
+		"vite": "^5.0.3"
 	},
 	"size-limit": [
 		{
@@ -67,5 +67,9 @@
 			"limit": "2 kB",
 			"path": "dist/index.mjs"
 		}
-	]
+	],
+	"dependencies": {
+		"@studio-freight/lenis": "^1.0.28",
+		"gsap": "npm:@gsap/shockingly@^3.12.2"
+	}
 }

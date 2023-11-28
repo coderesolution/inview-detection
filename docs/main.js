@@ -1,21 +1,31 @@
-/* Lib */
+// Vendors
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
+import Lenis from '@studio-freight/lenis';
+
+// Main script
 import InviewDetection from '../src/index'
 
-/* Demo CSS */
+// Demo CSS
 import './index.css'
 
-/* Register GSAP and plugins */
+// Register GSAP and plugins
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
-/* Lenis smooth scroll */
-const lenis = new Lenis()
+// Lenis smooth scroll
+const lenis = new Lenis({
+	lerp: 0.1,
+	duration: 1.2
+});
 
-function raf(time) {
-	lenis.raf(time)
-	requestAnimationFrame(raf)
-}
+lenis.on('scroll', ScrollTrigger.update);
 
-requestAnimationFrame(raf)
+gsap.ticker.add((time) => {
+	lenis.raf(time * 1000);
+});
+
+gsap.ticker.lagSmoothing(0);
 
 /* Initialise InviewDetection.js */
 
@@ -25,8 +35,8 @@ requestAnimationFrame(raf)
 
 const inview = new InviewDetection({
 	autoStart: false,
-});
-inview.register(gsap, ScrollTrigger, SplitText);
+})
+inview.register(gsap, ScrollTrigger, SplitText)
 
 /* Buttons */
 const oButtons = document.querySelectorAll('.js-button')
