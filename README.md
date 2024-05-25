@@ -3,7 +3,7 @@
 Inview Detection enables the creation of sequential animations based on in-view detection. Powered by GSAP.
 
 <a href="https://www.npmjs.com/package/inview-detection"><img src="https://img.shields.io/npm/v/inview-detection?color=red" alt="NPM Version"></a>
-<a href="LICENCE"><img src="https://img.shields.io/github/license/coderesolution/inview-detection?color=orange" alt="Licence"></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/coderesolution/inview-detection?color=orange" alt="Licence"></a>
 <img src="https://img.shields.io/bundlephobia/min/inview-detection?color=green" alt="Bundle file size">
 <img src="https://img.shields.io/bundlephobia/minzip/inview-detection?color=yellow&label=gzip%20size" alt="Bundle file size (gzip)">
 
