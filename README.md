@@ -1,6 +1,11 @@
-<h1 align="center">InviewDetection.js</h1>
+# Inview Detection
 
-A powerful javascript library to create sequential animations based on in-view detection. Powered by GSAP.
+Inview Detection enables the creation of sequential animations based on in-view detection. Powered by GSAP.
+
+<a href="https://www.npmjs.com/package/inview-detection"><img src="https://img.shields.io/npm/v/inview-detection?color=red" alt="NPM Version"></a>
+<a href="LICENCE"><img src="https://img.shields.io/github/license/coderesolution/inview-detection?color=orange" alt="Licence"></a>
+<img src="https://img.shields.io/bundlephobia/min/inview-detection?color=green" alt="Bundle file size">
+<img src="https://img.shields.io/bundlephobia/minzip/inview-detection?color=yellow&label=gzip%20size" alt="Bundle file size (gzip)">
 
 ## Features
 
@@ -8,247 +13,327 @@ A powerful javascript library to create sequential animations based on in-view d
 -   Scoping, bind elements to parent
 -   Custom queuing and animations
 -   Trigger callbacks
--   Staggered text animations with SplitText
 -   Repeatable
 -   Target specific screen sizes
 -   Debugging mode
--   Lightweight (>3Kb gzipped)
+-   Lightweight (1.63 kB gzipped)
 
 ## Dependencies
 
-The following <u>must</u> be instantiated before:
+Ensure the following dependencies are installed and properly registered:
 
--   GSAP v3 (https://greensock.com/gsap/)
--   GSAP ScrollTrigger (https://greensock.com/scrolltrigger/)
--   GSAP SplitText (https://greensock.com/splittext/)
+-   [GSAP v3](https://greensock.com/gsap/)
+-   [GSAP ScrollTrigger](https://greensock.com/scrolltrigger/)
 
 ## Quick start
 
-### Installation
+Inview Detection requires the GSAP library as well as ScrollTrigger to function correctly. Ensure both are included **before** Inview Detection and registered within the instantiation.
 
-InviewDetection.js requires the GSAP library, as well as ScrollTrigger and SplitText (Club GreenSock) to work. You need to include all of them before InviewDetection.js.
+### Install from NPM
 
-#### Boilerplate
+```js
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import InviewDetection from 'inview-detection'
 
-We have already included the file in our [Boilerplate](https://github.com/coderesolution/boilerplate).
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger)
 
-#### Use from CDN
+// Initialise InviewDetection and pass in gsap and ScrollTrigger
+const inview = new InviewDetection(
+	{
+		/* options */
+	},
+	gsap,
+	ScrollTrigger
+)
+```
+
+### Delayed start (recommended)
+
+To initialise the module without starting it immediately, set `autoStart` option to `false`.
+
+```js
+// Create instance but do not start automatically
+const inview = new InviewDetection(
+	{
+		autoStart: false,
+	},
+	gsap,
+	ScrollTrigger
+)
+
+// Start it when you are ready
+document.addEventListener('DOMContentLoaded', () => {
+	inview.start()
+})
+```
+
+With `autoStart` disabled, for extra clarity `inview.register` can be used to register `gsap` and `ScrollTrigger` outside of the instantiation.
+
+```js
+// Standard
+const inview = new InviewDetection(
+	{
+		autoStart: false,
+	},
+	gsap,
+	ScrollTrigger
+)
+```
+
+Optionally may be replaced with:
+
+```js
+const inview = new InviewDetection({
+	autoStart: false,
+})
+
+// Register gsap and ScrollTrigger separately
+inview.register(gsap, ScrollTrigger)
+```
+
+### Install from CDN
+
+If you prefer to use a CDN, here is an example:
 
 ```html
 <!-- Include GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
-<script src="/path-to/SplitText.min.js"></script>
 
 <!-- Include InviewDetection -->
-<script src="https://cdn.jsdelivr.net/gh/coderesolution/InviewDetection.js/bundled/InviewDetection.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/inview-detection/bundled/index.min.js"></script>
 
 <script>
-	// Register GSAP
-	gsap.registerPlugin(ScrollTrigger, SplitText)
+	// Register ScrollTrigger plugin
+	gsap.registerPlugin(ScrollTrigger)
 
-	// Initialise InviewDetection
-	const inview = new InviewDetection(/*options*/)
-</script>
-
-<!-- For better results, hide SplitText by default -->
-<style>
-	[data-inview-split] {
-		visibility: hidden;
-	}
-</style>
-```
-
-Alternatively, you can register GSAP inside the inview initialisation:
-
-```html
-<script>
-	// Initialise InviewDetection and register GSAP ScrollTrigger and SplitText plugins
-	const inview = new InviewDetection({
-		registerGsapPlugins: true,
-	})
+	// Initialise InviewDetection and pass in gsap and ScrollTrigger
+	const inview = new InviewDetection(
+		{
+			/* options */
+		},
+		gsap,
+		ScrollTrigger
+	)
 </script>
 ```
 
-If you wish to initiate the module but not start it yet, you can do so by setting the `autoStart` to false and running `inview.start()`. This can be helpful if you experience incorrect results when using the `data-inview-split` feature that uses GSAP:
+## Options
 
-```html
-<script>
-	// Create instance but do not start automatically
-	const inview = new InviewDetection({
-		autoStart: false,
-	})
-
-	// Start it when you are ready
-	document.addEventListener('DOMContentLoaded', (event) => {
-		inview.start()
-	})
-</script>
-```
-
-#### Install NPM module
+You can configure Inview Detection via options:
 
 ```js
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { SplitText } from 'gsap/SplitText'
-import InviewDetection from './path-to/InviewDetection'
-
-// Register GSAP
-gsap.registerPlugin(ScrollTrigger, SplitText)
-
-// Initialise InviewDetection
-const inview = new InviewDetection(/*options*/)
+const inview = new InviewDetection(
+	{
+		elements: '[data-inview]',
+		autoStart: true,
+		screen: '(min-width: 1025px)',
+		duration: 1,
+		delay: 0.1,
+		start: 'top 90%',
+		ease: 'power4',
+		stagger: 0.08,
+		animationFrom: {
+			opacity: 0,
+			'will-change': 'transform',
+			y: 20,
+		},
+		animationTo: {
+			opacity: 1,
+			y: 0,
+		},
+		inviewClass: 'is-inview',
+		viewedClass: 'has-viewed',
+		debug: false,
+	},
+	gsap,
+	ScrollTrigger
+)
 ```
 
-## Defaults
+All options:
 
-You can configure InviewDetection.js default via options (and overwrite them on a per-animation basis using modifiers):
+| Name            |  Type  |          Default          | Description                                                                                                                          |
+| :-------------- | :----: | :-----------------------: | :----------------------------------------------------------------------------------------------------------------------------------- |
+| `elements`      | `str`  |      `[data-inview]`      | What elements to apply inview animations to.                                                                                         |
+| `autoStart`     | `bool` |          `true`           | Whether to start immediately. Set to `false` for a delayed start (recommended).                                                      |
+| `screen`        | `str`  |  `'(min-width: 1025px)'`  | Specify media query rules for animations. This can be overwritten on a per animation-basis. Set to `all` to remove queries entirely. |
+| `duration`      | `num`  |            `1`            | Duration of each animation.                                                                                                          |
+| `delay`         | `num`  |           `.1`            | Delay before animation starts.                                                                                                       |
+| `start`         | `str`  |         `top 90%`         | ScrollTrigger's starting position for the animation.                                                                                 |
+| `ease`          | `str`  |         `power4`          | Easing of animation ([help](https://greensock.com/docs/Easing)).                                                                     |
+| `stagger`       | `num`  |          `0.08`           | Time between each animation in the sequence.                                                                                         |
+| `animationFrom` | `json` | `{"opacity": 0, "y": 20}` | The initial state of each animation.                                                                                                 |
+| `animationTo`   | `json` | `{"opacity": 1, "y": 0}`  | The final state of each animation.                                                                                                   |
+| `inviewClass`   | `str`  |       `'is-inview'`       | The class that is temporarily assigned to elements when they are within the viewport.                                                |
+| `viewedClass`   | `str`  |      `'has-viewed'`       | The class that is permanently assigned to elements when they have been within the viewport.                                          |
+| `debug`         | `bool` |          `false`          | Set debug mode to all instances. Enables markers and console logs.                                                                   |
 
-```js
-const inview = new InviewDetection({
-	elements: '[data-inview]',
-	screen: '(min-width: 1025px)',
-	duration: 1,
-	delay: 1,
-	start: 'top 90%',
-	ease: 'power4',
-	stagger: 0.155,
-	animationFrom: {
-		opacity: 0,
-		'will-change': 'transform',
-		y: 20,
-	},
-	animationTo: {
-		opacity: 1,
-		y: 0,
-	},
-	autoStart: true,
-	registerGsapPlugins: false,
-	inviewClass: 'is-inview',
-	viewedClass: 'has-viewed',
-})
+## Attributes
+
+Apply any of the following data attributes in conjunction with `[data-inview]` to enable custom animations.
+
+-   `scope` for scoped elements within parent
+-   `child` for child elements that should animate with parent
+-   `debug` for enabling debugging markers and logs
+-   `order` for specifying the order of animation
+-   `repeat` for allowing repeat animations
+-   `from` for setting animation from properties
+-   `to` for setting animation to properties
+
+### Scope
+
+Attribute: `data-inview-scope`
+Type: `string`
+
+Specify the scope of nested elements using wildcards like `*`, `> *` or selectors `.class, #id`.
+
+```html
+<div data-inview data-inview-scope="> *">
+	<!-- All direct children will be considered for animation -->
+</div>
 ```
 
-| Name                  |   Type    |          Default          | Description                                                                                          |
-| :-------------------- | :-------: | :-----------------------: | :--------------------------------------------------------------------------------------------------- | --- |
-| `elements`            | `string`  |       `data-inview`       | Trigger elements, defaults to                                                                        |
-| `screen`              | `string`  |  `'(min-width: 1025px)'`  | Set media query conditions via matchMedia to target specific screen sizes. Use 'all' for every size. |
-| `duration`            | `number`  |            `1`            | Duration of each animation.                                                                          |
-| `delay`               | `number`  |           `.1`            | Delay before animation.                                                                              |
-| `start`               | `string`  |         `top 90%`         | ScrollTrigger's starting position.                                                                   |
-| `ease`                | `string`  |         `power4`          | Easing of animation ([help](https://greensock.com/docs/Easing)).                                     |
-| `stagger`             | `number`  |          `0.08`           | Time between each animation. Defaults to                                                             |
-| `animationFrom`       |  `json`   | `{"opacity": 0, "y": 20}` | The beginning of each animation.                                                                     |
-| `animationTo`         |  `json`   | `{"opacity": 1, "y": 0}`  | The ending of each animation.                                                                        |
-| `autoStart`           | `boolean` |           true            | Initialise straight-away. Useful if a delay is needed to fix SplitText issues.                       |
-| `registerGsapPlugins` | `boolean` |           false           | Register ScrollTrigger and SplitText automatically.                                                  |
-| `inviewClass`         | `string`  |        `is-inview`        | Class applied to parent elements (not scoped) that are inview.                                       |     |
-| `viewedClass`         | `string`  |       `has-viewed`        | Class applied to parent elements (not scoped) that have been viewed.                                 |
+### Child
 
-## Instructions
+Attribute: `data-inview-child`
 
-### Usage
+Apply attribute to elements that should animate when parent comes into view.
 
-| Name                |   Type   | Description                                                                                                                                                                                                           |
-| :------------------ | :------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `data-inview`       |          | Apply attribute to trigger elements that are either standalone or parents of nested items by including a `data-inview-scope`                                                                                          |
-| `data-inview-scope` | `string` | Apply to `data-inview` element to specify the scope of nested elements. Use wildcards like `*`, `> *` or selectors `.class, #id`. By default, it will scope only `data-inview-child` and `data-inview-split` elements |
-| `data-inview-child` |          | Apply attribute to elements that should animate when parent comes into to view                                                                                                                                        |
-| `data-inview-split` | `string` | Same as `data-inview-child`, however, apply SplitText to direct text elements to animate per line. Set a value to target specific elements, i.e. `p, li`                                                              |
+```html
+<div data-inview>
+	<div data-inview-child>Child 1</div>
+	<div data-inview-child>Child 2</div>
+</div>
+```
 
-### Modifiers
+### Debug
 
-Apply any of the following to `[data-inview]` element to apply custom settings:
+Attribute: `data-inview-debug`
 
-| Name                   |   Type   |          Default          | Description                                                                                                                                                                                                                                                                                    |
-| :--------------------- | :------: | :-----------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `data-inview-debug`    |          |                           | Set GSAP markers and output helpful console information.                                                                                                                                                                                                                                       |
-| `data-inview-screen`   |          |  `'(min-width: 1025px)'`  | Enable animation only at specific screen sizes. Use 'all' for every size.                                                                                                                                                                                                                      |
-| `data-inview-duration` | `number` |            `1`            | Duration of each element transition.                                                                                                                                                                                                                                                           |
-| `data-inview-delay`    | `number` |           `.1`            | Delay before entire sequence begins.                                                                                                                                                                                                                                                           |
-| `data-inview-stagger`  | `number` |          `0.08`           | Delay between each element in sequence.                                                                                                                                                                                                                                                        |
-| `data-inview-ease`     | `string` |         `power4`          | GSAP easing.                                                                                                                                                                                                                                                                                   |
-| `data-inview-order`    | `number` |                           | Apply an index to scoped elements, either `[data-inview-child]` or `[data-inview-split]` or elements specified in the respective parent's `[data-inview-scope]`. This will adjust the order of the element within the animation sequence. Negative numbers appear first, then positive numbers |
-| `data-inview-start`    | `string` |         `top 90%`         | When animation begins.                                                                                                                                                                                                                                                                         |
-| `data-inview-from`     |  `json`  | `{"opacity": 0, "y": 20}` | Apply custom `gsap.from()` properties for every element. Example: `{"opacity": 0, "y": 20, "rotation": 0}`                                                                                                                                                                                     |
-| `data-inview-to`       |  `json`  | `{"opacity": 1, "y": 0}`  | Apply custom `gsap.to()` properties for every element. Example: `{"opacity": 1, "y": 0, "rotation": 10}`                                                                                                                                                                                       |
-| `data-inview-repeat`   |          |                           | Whether or not to repeat animations when they re-enter the viewport. Disabled by default.                                                                                                                                                                                                      |
-| `data-inview-call`     | `string` |                           | Fire custom events when elements enter, re-enter. Example: `data-inview-call="scrollEvent"`.                                                                                                                                                                                                   |
+Enable debugging markers and logs for animations.
 
-### Methods
+```html
+<div data-inview data-inview-debug></div>
+```
 
-#### Start
+### Order
 
-Start the initialisation if `autoStart` is set to false.
+Attribute: `data-inview-order`
+Type: `number`
+
+Specify the order of animation for elements within a scope.
+
+```html
+<div data-inview>
+	<div data-inview-child data-inview-order="1">First</div>
+	<div data-inview-child data-inview-order="2">Second</div>
+</div>
+```
+
+### Repeat
+
+Attribute: `data-inview-repeat`
+
+Allow animations to re-trigger when elements re-enter the viewport.
+
+```html
+<div data-inview data-inview-repeat></div>
+```
+
+### From / To
+
+Attributes: `data-inview-from`, `data-inview-to`
+Type: `json`
+
+Specify custom `gsap.from()` and `gsap.to()` properties for animations.
+
+```html
+<div data-inview data-inview-from='{"opacity": 0, "y": 20}' data-inview-to='{"opacity": 1, "y": 0}'>
+	Custom Animation
+</div>
+```
+
+## Methods
+
+### Start
+
+Start Inview Detection to initialize animations, useful when `autoStart` is set to `false`.
 
 ```js
 inview.start()
 ```
 
-Tip: This is useful if you want to start after the page has loaded, like so:
+### Register GSAP
+
+Register `gsap` and `ScrollTrigger` dependencies with InviewDetection.
 
 ```js
-document.addEventListener('DOMContentLoaded', (event) => {
-	inview.start()
-})
+inview.register(gsap, ScrollTrigger)
 ```
 
-#### Refresh
+### Refresh
 
-Update ScrollTrigger calculations.
+Update ScrollTrigger calculations, useful if the page height changes.
 
 ```js
 inview.refresh()
 ```
 
-#### Stop
+### Stop
 
-Stop all animations so anything not yet visible does not load in.
+Stop all animations and remove the ScrollTrigger instances.
 
 ```js
+/* Stop all animations */
 inview.stop()
+
+/* Stop a specific animation */
+// Fetch the element
+const element = document.querySelector('#myElement')
+const trigger = inview.fetch(element)
+inview.stop(trigger)
 ```
 
-#### Restart
+### Restart
 
-Stop and restart all animations.
+Stop and restart animations.
 
 ```js
 inview.restart()
 ```
 
-### Classes
+## Classes
 
-| Class        | Application                                        |
-| :----------- | :------------------------------------------------- |
-| `is-inview`  | Once the element has came into view at least once. |
-| `has-viewed` | Toggles when the element is in view.               |
+| Class        | Application                                                  |
+| :----------- | :----------------------------------------------------------- |
+| `is-inview`  | Temporarily assigned to elements when they are in view.      |
+| `has-viewed` | Permanently assigned to element when they have been in view. |
 
-The application remains the same even if the classes have been changed from their default setting.
+## Events
 
-### Events
+### Enter/Leave the viewport
 
-#### Element enter/leave the viewport
-
-Detect when a animation (re)fires from a particular direction.
+Detect when elements enter or leave the viewport.
 
 ```js
 inview.on('onEnter', (element) => {
-	console.log('Entering top of view:', element)
+	console.log('Entering view:', element)
 })
 inview.on('onLeave', (element) => {
-	console.log('Leaving bottom of view:', element)
+	console.log('Leaving view:', element)
 })
 inview.on('onEnterBack', (element) => {
-	console.log('Entering bottom of view:', element)
+	console.log('Re-entering view:', element)
 })
 inview.on('onLeaveBack', (element) => {
-	console.log('Leaving top of view:', element)
+	console.log('Leaving view again:', element)
 })
 ```
 
-#### Refresh
+### Refresh
 
 Detect when the `inview.refresh()` method is fired.
 
@@ -258,7 +343,7 @@ inview.on('refresh', () => {
 })
 ```
 
-#### Stop
+### Stop
 
 Detect when the `inview.stop()` method is fired.
 
@@ -268,7 +353,7 @@ inview.on('stop', (target) => {
 })
 ```
 
-#### Restart
+### Restart
 
 Detect when the `inview.restart()` method is fired.
 
@@ -278,124 +363,14 @@ inview.on('restart', () => {
 })
 ```
 
-### Custom Callbacks
-
-#### Events
-
-Fire custom events when elements enter or leave the viewport.
-
-```html
-<div data-inview data-inview-call="inviewEvent">Trigger</div>
-```
-
-```js
-window.addEventListener('inviewEvent', (e) => {
-	console.log('target', e.detail.target)
-})
-```
-
-## FAQ
-
-<details>
-<summary>1. The elements appear for a second before hiding and subsequently animating in</summary>
-
-#### Reason
-
-This is because Javascript has to load before it can hide the elements.
-
-#### Solution
-
-Here are recommended solutions:
-
--   Use critical CSS to apply essential styles on load, such as hiding above-the-fold elements that you wish to animate.
--   Add a page transition.
--   Add a pre-loader.
-
-</details>
-
-<details>
-
-<summary>2. My `data-inview-split` lines are splitting incorrectly</summary>
-
-#### Reason
-
-This may happen is the text or its' container is modified by Javascript.
-
-#### Solution
-
-As a result, it is best to try disabling autoStart by setting it false and running `inview.start()` when everything else has ran.
-
-#### Example
-
-```html
-<script>
-	// Create instance but do not start automatically
-	const inview = new InviewDetection({
-		autoStart: false,
-	})
-
-	// Start it when you are ready
-	document.addEventListener('DOMContentLoaded', (event) => {
-		inview.start()
-	})
-</script>
-
-<!-- Hide split elements on load -->
-<style>
-	[data-inview-split] {
-		visibility: hidden;
-	}
-</style>
-```
-
-</details>
-
-<details>
-
-<summary>3. Using `data-inview-from` and `data-inview-to` attributes with PHP+HTML</summary>
-
-#### Reason
-
-This is purely frustrating having so many speech-marks and apostrophes, so here are some easy work-arounds that beat opening/closing PHP.
-
-#### Solution
-
-As a result, it is best to try disabling autoStart by setting it false and running `inview.start()` when everything else has ran.
-
-#### Example
-
-a. Concatenate strings:
-```php
-<?php
-$attr = '{"opacity": 0, "scale": 20}';
-echo '" data-inview data-inview-from=' . $attr . '">';
-?>
-```
-
-b. Use an array and json_encode:
-```php
-<?php
-$attr = ['opacity' => 0, 'scale' => 20];
-echo '" data-inview data-inview-from=' . json_encode($attr) . '">';
-?>
-```
-
-c. Use heredoc or nowdoc syntax:
-```php
-<?php echo <<<EOF
-" data-inview data-inview-from={"opacity": 0, "scale": 20}">
-EOF;
-?>
-```
-
-</details>
-
 ## Examples of use
 
--   [Code Resolution](https://coderesolution.com/): Digital agency partner.
--   [Enumera Molecular](#): Coming soon.
--   [Stairwell](#): Coming soon.
--   [US Foot & Ankle Specialists](#): Coming soon.
+-   [Code Resolution](https://coderesolution.com)
+-   [Bay Harbor Towers](https://bayharbortowers.com)
+-   [Enumera Molecular](https://enumeramolecular.com)
+-   [Stairwell](https://stairwell.com)
+-   [Divino](https://divinoharrogate.co.uk)
+-   [US Foot & Ankle Specialists](https://us-fas.com)
 
 ## License
 

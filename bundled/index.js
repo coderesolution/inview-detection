@@ -19,12 +19,11 @@
   }
 
   /**
-   * Written by Elliott Mangham at Code Resolution.
-   * Maintained by Code Resolution.
+   * Written by Elliott Mangham at Code Resolution. Maintained by Code Resolution.
    * made@coderesolution.com
    */
   var InviewDetection = /*#__PURE__*/function () {
-    function InviewDetection(options, gsap, ScrollTrigger, SplitText) {
+    function InviewDetection(options, gsap, ScrollTrigger) {
       if (options === void 0) {
         options = {};
       }
@@ -34,13 +33,9 @@
       if (ScrollTrigger === void 0) {
         ScrollTrigger = null;
       }
-      if (SplitText === void 0) {
-        SplitText = null;
-      }
       // Set dependencies
       this._gsap = gsap;
       this._ScrollTrigger = ScrollTrigger;
-      this._SplitText = SplitText;
 
       // Define default options
       this.defaultOptions = {
@@ -62,7 +57,8 @@
         screen: '(min-width: 1025px)',
         autoStart: true,
         inviewClass: 'is-inview',
-        viewedClass: 'has-viewed'
+        viewedClass: 'has-viewed',
+        debug: false
       };
 
       // Merge default options with provided options
@@ -85,10 +81,9 @@
 
     // Register GSAP and plugins
     var _proto = InviewDetection.prototype;
-    _proto.register = function register(gsap, ScrollTrigger, SplitText) {
+    _proto.register = function register(gsap, ScrollTrigger) {
       this._gsap = gsap;
       this._ScrollTrigger = ScrollTrigger;
-      this._SplitText = SplitText;
     }
 
     // Function to get a specific option
@@ -112,11 +107,6 @@
         console.log('ScrollTrigger is not registered. Exiting');
         return;
       }
-
-      // Check if SplitText is registered
-      if (this._SplitText === null || this._SplitText === undefined) {
-        console.log('SplitText is not registered. data-inview-split is disabled.');
-      }
       try {
         // Convert elements to an array and loop through each
         this._gsap.utils.toArray(this.getOption('elements')).forEach(function (parent, index) {
@@ -125,7 +115,7 @@
 
           // If the parent doesn't have 'data-inview-scope' attribute,
           // add it to the animated elements
-          // Otherwise, add scoped, child, and split elements
+          // Otherwise, add scoped and child elements
           if (!parent.hasAttribute('data-inview-scope')) {
             animatedElementsList.push({
               el: parent,
@@ -134,7 +124,6 @@
           } else {
             _this.addScopedElements(parent, animatedElementsList);
             _this.addChildElements(parent, animatedElementsList);
-            _this.addSplitElements(parent, animatedElementsList);
           }
 
           // Order the animated elements based on their 'order' property
@@ -225,6 +214,7 @@
       var parent = element.parentElement;
       var ancestorsIndexed = 0;
       var ancestorsLimit = 5;
+
       // Iterate through parent elements up to ancestorsLimit
       while (parent && ancestorsIndexed <= ancestorsLimit) {
         if (parent.hasAttribute('data-inview-order')) {
@@ -238,93 +228,6 @@
         return isNaN(+value) ? false : +value;
       }
       return false;
-    }
-
-    // Function to add split elements to the animatedElementsList array
-    ;
-    _proto.addSplitElements = function addSplitElements(parent, animatedElementsList) {
-      var _this4 = this;
-      var splitElements = parent.querySelectorAll(':scope *:where([data-inview-split])');
-      var splitElementsParent = Array.from(splitElements).filter(function (element) {
-        return element.dataset.inviewSplit;
-      });
-      var selfToSplit = Array.from(splitElements).filter(function (element) {
-        return !element.dataset.inviewSplit;
-      });
-      var elementsToSplit = [].concat(selfToSplit, this.getSplitChildren(splitElementsParent));
-
-      // For each element to split, add it to the animatedElementsList array
-      elementsToSplit.forEach(function (splitElement) {
-        // If splitElement is a NodeList, handle each Node individually
-        if (splitElement instanceof NodeList) {
-          splitElement.forEach(function (node) {
-            return _this4.addSplitElement(node, animatedElementsList);
-          });
-        } else {
-          _this4.addSplitElement(splitElement, animatedElementsList);
-        }
-      });
-    }
-
-    // Function to get split children
-    ;
-    _proto.getSplitChildren = function getSplitChildren(splitElementsParent) {
-      var splitChildren = [];
-
-      // For each split parent, add its children to splitChildren array
-      splitElementsParent.forEach(function (splitParent) {
-        splitChildren = [].concat(splitChildren, splitParent.querySelectorAll(':scope ' + splitParent.dataset.inviewSplit));
-      });
-      return splitChildren;
-    }
-
-    // Function to add a split element to the animatedElementsList array
-    ;
-    _proto.addSplitElement = function addSplitElement(splitElement, animatedElementsList) {
-      var _this5 = this;
-      if (this._SplitText) {
-        try {
-          // Check if splitElement is a DOM element
-          if (splitElement instanceof Element) {
-            // Find the closest parent with 'data-inview-order' attribute
-            var order = this.findClosestParentOrderAttr(splitElement);
-
-            // Split the text of the splitElement into lines
-            var splitChildren = new this._SplitText(splitElement, {
-              type: 'lines',
-              linesClass: 'lineChild'
-            });
-
-            // For each line, add it to the animatedElementsList array
-            splitChildren.lines.forEach(function (line) {
-              if (order) {
-                order += 0.01;
-                line.dataset.inviewOrder = order.toFixed(2);
-                animatedElementsList.push({
-                  el: line,
-                  order: order
-                });
-                _this5.animatedElementsList.push(line);
-              } else {
-                animatedElementsList.push({
-                  el: line,
-                  order: false
-                });
-                _this5.animatedElementsList.push(line);
-              }
-
-              // Set visibility to visible
-              line.style.visibility = 'visible';
-            });
-          } else {
-            // Log an error if splitElement is not a DOM element
-            console.error('splitElement is not a DOM element:', splitElement);
-          }
-        } catch (error) {
-          // Catch and log any errors
-          console.error('Error splitting element:', error);
-        }
-      }
     }
 
     // Function to order animated elements based on their 'order' property
@@ -344,7 +247,7 @@
     // Function to animate the elements
     ;
     _proto.animateElements = function animateElements(parent, animatedElementsList, index) {
-      var _this6 = this;
+      var _this4 = this;
       // Initialise animation property arrays
       var animationFromPropertiesArray = [];
       var animationToPropertiesArray = [];
@@ -357,16 +260,16 @@
 
       // Initialise a new gsap timeline
       matchMedia.add(screen, function () {
-        var timeline = _this6._gsap.timeline({
+        var timeline = _this4._gsap.timeline({
           scrollTrigger: {
             trigger: parent,
-            start: parent.dataset.inviewStart || _this6.getOption('start'),
+            start: parent.dataset.inviewStart || _this4.getOption('start'),
             invalidateOnRefresh: true,
             onEnter: function () {
               try {
                 timeline.play();
                 timeline.hasPlayed = true;
-                parent.classList.add(_this6.getOption('viewedClass'));
+                parent.classList.add(_this4.getOption('viewedClass'));
 
                 // Check if the parent has the 'data-inview-call' attribute and, if so, dispatch a custom event with the attribute's value as the event name
                 if (parent.hasAttribute('data-inview-call')) {
@@ -377,8 +280,8 @@
                     }
                   }));
                 }
-                if (_this6.eventListeners['onEnter']) {
-                  _this6.emit('onEnter', parent);
+                if (_this4.eventListeners['onEnter']) {
+                  _this4.emit('onEnter', parent);
                 }
                 return Promise.resolve();
               } catch (e) {
@@ -389,8 +292,8 @@
               if (parent.hasAttribute('data-inview-repeat')) {
                 timeline.restart().pause();
               }
-              if (_this6.eventListeners['onLeave']) {
-                _this6.emit('onLeave', parent);
+              if (_this4.eventListeners['onLeave']) {
+                _this4.emit('onLeave', parent);
               }
             },
             onEnterBack: function () {
@@ -402,8 +305,8 @@
                   timeline.play();
                   timeline.hasPlayed = true;
                 }
-                if (_this6.eventListeners['onEnterBack']) {
-                  _this6.emit('onEnterBack', parent);
+                if (_this4.eventListeners['onEnterBack']) {
+                  _this4.emit('onEnterBack', parent);
                 }
                 return Promise.resolve();
               } catch (e) {
@@ -414,14 +317,15 @@
               if (parent.hasAttribute('data-inview-repeat')) {
                 timeline.restart().pause();
               }
-              if (_this6.eventListeners['onLeaveBack']) {
-                _this6.emit('onLeaveBack', parent);
+              if (_this4.eventListeners['onLeaveBack']) {
+                _this4.emit('onLeaveBack', parent);
               }
             },
-            markers: parent.hasAttribute('data-inview-debug') ? true : false,
+            markers: _this4.getOption('debug') || parent.hasAttribute('data-inview-debug') ? true : false,
+            // Modified line to include global debug option
             toggleClass: {
               targets: parent,
-              className: _this6.getOption('inviewClass')
+              className: _this4.getOption('inviewClass')
             }
           }
         });
@@ -431,8 +335,8 @@
         var currentTime = 0;
         animatedElementsList.forEach(function (element) {
           try {
-            var animationFromProperties = _this6.getOption('animationFrom');
-            var animationToProperties = _this6.getOption('animationTo');
+            var animationFromProperties = _this4.getOption('animationFrom');
+            var animationToProperties = _this4.getOption('animationTo');
 
             // Check if the element has custom animation properties defined in 'data-inview-from' and 'data-inview-to'
             if (element.dataset.inviewFrom) {
@@ -451,16 +355,16 @@
             animationToPropertiesArray.push(animationToProperties);
 
             // Set initial animation properties for the animated elements
-            _this6._gsap.set(element, animationFromProperties);
+            _this4._gsap.set(element, animationFromProperties);
 
             // Get the stagger time
-            var staggerTime = parent.dataset.inviewStagger || _this6.getOption('stagger');
+            var staggerTime = parent.dataset.inviewStagger || _this4.getOption('stagger');
 
             // Add the animation to the timeline
             timeline.to(element, _extends({}, animationToProperties, {
-              duration: parent.dataset.inviewDuration || _this6.getOption('duration'),
-              delay: parent.dataset.inviewDelay || _this6.getOption('delay'),
-              ease: parent.dataset.inviewEase || _this6.getOption('ease')
+              duration: parent.dataset.inviewDuration || _this4.getOption('duration'),
+              delay: parent.dataset.inviewDelay || _this4.getOption('delay'),
+              ease: parent.dataset.inviewEase || _this4.getOption('ease')
             }), currentTime);
 
             // Increase the current time position by the stagger time for the next animation
@@ -475,7 +379,7 @@
       });
 
       // Debug mode
-      if (parent.hasAttribute('data-inview-debug')) {
+      if (this.getOption('debug') || parent.hasAttribute('data-inview-debug')) {
         this.debugMode(parent, animatedElementsList, animationFromPropertiesArray, animationToPropertiesArray, index);
       }
     }
@@ -511,7 +415,7 @@
     // Function to stop the animations and ScrollTrigger instances
     ;
     _proto.stop = function stop() {
-      var _this7 = this;
+      var _this5 = this;
       // Kill ScrollTrigger instances created in this script
       this.triggers.forEach(function (st) {
         return st.kill();
@@ -520,7 +424,7 @@
       // Kill all animations
       var allElements = this._gsap.utils.toArray(this.getOption('elements')).concat(this.animatedElementsList);
       allElements.forEach(function (element) {
-        _this7._gsap.killTweensOf(element);
+        _this5._gsap.killTweensOf(element);
       });
       if (this.eventListeners['stop']) {
         this.emit('stop', parent);
@@ -530,10 +434,10 @@
     // Function to restart the animations and reinitialise everything
     ;
     _proto.restart = function restart() {
-      var _this8 = this;
+      var _this6 = this;
       // Kill all GSAP animations of the elements
       this._gsap.utils.toArray(this.getOption('elements')).forEach(function (element) {
-        _this8._gsap.killTweensOf(element);
+        _this6._gsap.killTweensOf(element);
       });
 
       // Reinitialise everything
