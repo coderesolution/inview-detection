@@ -5,7 +5,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Demo - InviewDetection.js</title>
 		<script type="module" src="./main.js"></script>
-		<style>[data-inview-split] { visibility: hidden; }</style>
 	</head>
 	<body class="main">
 
@@ -16,7 +15,7 @@
 					<p>Animate multiple elements when their parent comes into view</p>
 				</div>
 			</div>
-			<div class="section_canvas" data-inview data-inview-scope>
+			<div class="section_canvas" data-inview data-inview-scope data-inview-debug>
 				<div class="boxes">
 					<div class="box" data-inview-child>1</div>
 					<div class="box" data-inview-child>2</div>
@@ -91,43 +90,6 @@
 					<div class="box" data-inview data-inview-delay="1">1</div>
 					<div class="box" data-inview data-inview-delay="2">2</div>
 					<div class="box" data-inview data-inview-delay="3">3</div>
-				</div>
-			</div>
-		</section>
-
-		<section id="splitting" class="section -splitting">
-			<div class="section_label">
-				<div class="label_heading">Text Splitting</div>
-				<div class="label_description">
-					<p>Animate lines of text when their parent comes into view</p>
-				</div>
-			</div>
-			<div class="section_canvas" data-inview data-inview-scope data-inview-debug data-inview-screen="all">
-			<div class="text">
-				<div class="lines">
-					<p data-inview-child data-inview-order="4">Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-				</div>
-				<div class="lines" data-inview-split="p" data-inview-order="3">
-					<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum.</p>
-					<p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-					<p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Maecenas faucibus mollis interdum.</p>
-					<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-				</div>
-				<div class="lines">
-					<p data-inview-child data-inview-order="2">Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-				</div>
-				<div class="lines" data-inview-split="p,li" data-inview-order="0">
-					<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur purus sit amet fermentum.</p>
-					<p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-					<ul>
-						<li>Cras mattis consectetur purus sit amet fermentum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</li>
-						<li>Cras mattis consectetur purus sit amet fermentum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</li>
-					</ul>
-					<p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Maecenas faucibus mollis interdum.</p>
-					<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
-				</div>
-				<div class="lines">
-					<p data-inview-child data-inview-order="-1">Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
 				</div>
 			</div>
 		</section>
@@ -242,8 +204,8 @@
 					<p>Useful developer consoling tools and markers</p>
 				</div>
 			</div>
-			<div class="section_canvas" data-inview data-inview-scope data-inview-debug>
-				<div class="lines" data-inview-split>
+			<div class="section_canvas" data-inview data-inview-scope="p" data-inview-debug>
+				<div class="lines">
 					<p>Open the console to see useful information.</p>
 					<p>Oh and check out those markers!</p>
 				</div>

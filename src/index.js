@@ -1,14 +1,12 @@
 /**
- * Written by Elliott Mangham at Code Resolution.
- * Maintained by Code Resolution.
+ * Written by Elliott Mangham at Code Resolution. Maintained by Code Resolution.
  * made@coderesolution.com
  */
 export default class InviewDetection {
-	constructor(options = {}, gsap = null, ScrollTrigger = null, SplitText = null) {
+	constructor(options = {}, gsap = null, ScrollTrigger = null) {
 		// Set dependencies
 		this._gsap = gsap
 		this._ScrollTrigger = ScrollTrigger
-		this._SplitText = SplitText
 
 		// Define default options
 		this.defaultOptions = {
@@ -31,6 +29,7 @@ export default class InviewDetection {
 			autoStart: true,
 			inviewClass: 'is-inview',
 			viewedClass: 'has-viewed',
+			debug: false,
 		}
 
 		// Merge default options with provided options
@@ -52,10 +51,9 @@ export default class InviewDetection {
 	}
 
 	// Register GSAP and plugins
-	register(gsap, ScrollTrigger, SplitText) {
+	register(gsap, ScrollTrigger) {
 		this._gsap = gsap
 		this._ScrollTrigger = ScrollTrigger
-		this._SplitText = SplitText
 	}
 
 	// Function to get a specific option
@@ -77,11 +75,6 @@ export default class InviewDetection {
 			return
 		}
 
-		// Check if SplitText is registered
-		if (this._SplitText === null || this._SplitText === undefined) {
-			console.log('SplitText is not registered. data-inview-split is disabled.')
-		}
-
 		try {
 			// Convert elements to an array and loop through each
 			this._gsap.utils.toArray(this.getOption('elements')).forEach((parent, index) => {
@@ -90,13 +83,12 @@ export default class InviewDetection {
 
 				// If the parent doesn't have 'data-inview-scope' attribute,
 				// add it to the animated elements
-				// Otherwise, add scoped, child, and split elements
+				// Otherwise, add scoped and child elements
 				if (!parent.hasAttribute('data-inview-scope')) {
 					animatedElementsList.push({ el: parent, order: parent.dataset.inviewOrder })
 				} else {
 					this.addScopedElements(parent, animatedElementsList)
 					this.addChildElements(parent, animatedElementsList)
-					this.addSplitElements(parent, animatedElementsList)
 				}
 
 				// Order the animated elements based on their 'order' property
@@ -173,6 +165,7 @@ export default class InviewDetection {
 		let parent = element.parentElement
 		let ancestorsIndexed = 0
 		let ancestorsLimit = 5
+
 		// Iterate through parent elements up to ancestorsLimit
 		while (parent && ancestorsIndexed <= ancestorsLimit) {
 			if (parent.hasAttribute('data-inview-order')) {
@@ -181,92 +174,13 @@ export default class InviewDetection {
 			parent = parent.parentElement
 			ancestorsIndexed++
 		}
+
 		if (element.hasAttribute('data-inview-order')) {
 			const value = element.getAttribute('data-inview-order')
 			return isNaN(+value) ? false : +value
 		}
+
 		return false
-	}
-
-	// Function to add split elements to the animatedElementsList array
-	addSplitElements(parent, animatedElementsList) {
-		const splitElements = parent.querySelectorAll(':scope *:where([data-inview-split])')
-		const splitElementsParent = Array.from(splitElements).filter((element) => element.dataset.inviewSplit)
-		const selfToSplit = Array.from(splitElements).filter((element) => !element.dataset.inviewSplit)
-
-		let elementsToSplit = [...selfToSplit, ...this.getSplitChildren(splitElementsParent)]
-
-		// For each element to split, add it to the animatedElementsList array
-		elementsToSplit.forEach((splitElement) => {
-			// If splitElement is a NodeList, handle each Node individually
-			if (splitElement instanceof NodeList) {
-				splitElement.forEach((node) => this.addSplitElement(node, animatedElementsList))
-			} else {
-				this.addSplitElement(splitElement, animatedElementsList)
-			}
-		})
-	}
-
-	// Function to get split children
-	getSplitChildren(splitElementsParent) {
-		let splitChildren = []
-
-		// For each split parent, add its children to splitChildren array
-		splitElementsParent.forEach((splitParent) => {
-			splitChildren = [
-				...splitChildren,
-				...splitParent.querySelectorAll(':scope ' + splitParent.dataset.inviewSplit),
-			]
-		})
-
-		return splitChildren
-	}
-
-	// Function to add a split element to the animatedElementsList array
-	addSplitElement(splitElement, animatedElementsList) {
-		if (this._SplitText) {
-			try {
-				// Check if splitElement is a DOM element
-				if (splitElement instanceof Element) {
-					// Find the closest parent with 'data-inview-order' attribute
-					let order = this.findClosestParentOrderAttr(splitElement)
-
-					// Split the text of the splitElement into lines
-					const splitChildren = new this._SplitText(splitElement, {
-						type: 'lines',
-						linesClass: 'lineChild',
-					})
-
-					// For each line, add it to the animatedElementsList array
-					splitChildren.lines.forEach((line) => {
-						if (order) {
-							order += 0.01
-							line.dataset.inviewOrder = order.toFixed(2)
-							animatedElementsList.push({
-								el: line,
-								order: order,
-							})
-							this.animatedElementsList.push(line)
-						} else {
-							animatedElementsList.push({
-								el: line,
-								order: false,
-							})
-							this.animatedElementsList.push(line)
-						}
-
-						// Set visibility to visible
-						line.style.visibility = 'visible'
-					})
-				} else {
-					// Log an error if splitElement is not a DOM element
-					console.error('splitElement is not a DOM element:', splitElement)
-				}
-			} catch (error) {
-				// Catch and log any errors
-				console.error('Error splitting element:', error)
-			}
-		}
 	}
 
 	// Function to order animated elements based on their 'order' property
@@ -350,7 +264,7 @@ export default class InviewDetection {
 							this.emit('onLeaveBack', parent)
 						}
 					},
-					markers: parent.hasAttribute('data-inview-debug') ? true : false,
+					markers: this.getOption('debug') || parent.hasAttribute('data-inview-debug') ? true : false, // Modified line to include global debug option
 					toggleClass: {
 						targets: parent,
 						className: this.getOption('inviewClass'),
@@ -415,7 +329,7 @@ export default class InviewDetection {
 		})
 
 		// Debug mode
-		if (parent.hasAttribute('data-inview-debug')) {
+		if (this.getOption('debug') || parent.hasAttribute('data-inview-debug')) {
 			this.debugMode(
 				parent,
 				animatedElementsList,
