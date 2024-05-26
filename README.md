@@ -13,6 +13,7 @@ Inview Detection enables the creation of sequential animations based on in-view 
 -   Scoping, bind elements to parent
 -   Custom queuing and animations
 -   Trigger callbacks
+-   Conditional classes
 -   Repeatable
 -   Target specific screen sizes
 -   Debugging mode
@@ -45,7 +46,7 @@ const inview = new InviewDetection(
 		/* options */
 	},
 	gsap,
-	ScrollTrigger
+	ScrollTrigger,
 )
 ```
 
@@ -60,7 +61,7 @@ const inview = new InviewDetection(
 		autoStart: false,
 	},
 	gsap,
-	ScrollTrigger
+	ScrollTrigger,
 )
 
 // Start it when you are ready
@@ -78,7 +79,7 @@ const inview = new InviewDetection(
 		autoStart: false,
 	},
 	gsap,
-	ScrollTrigger
+	ScrollTrigger,
 )
 ```
 
@@ -115,7 +116,7 @@ If you prefer to use a CDN, here is an example:
 			/* options */
 		},
 		gsap,
-		ScrollTrigger
+		ScrollTrigger,
 	)
 </script>
 ```
@@ -149,7 +150,7 @@ const inview = new InviewDetection(
 		debug: false,
 	},
 	gsap,
-	ScrollTrigger
+	ScrollTrigger,
 )
 ```
 
@@ -200,10 +201,10 @@ Specify the scope of nested elements using wildcards like `*`, `> *` or selector
 
 Attribute: `data-inview-child`
 
-Apply attribute to elements that should animate when parent comes into view.
+Apply attribute to elements that should animate when parent comes into view. The parent must have `[data-inview]` and `[data-inview-scope]` attributes.
 
 ```html
-<div data-inview>
+<div data-inview data-inview-scope>
 	<div data-inview-child>Child 1</div>
 	<div data-inview-child>Child 2</div>
 </div>
@@ -260,7 +261,7 @@ Specify custom `gsap.from()` and `gsap.to()` properties for animations.
 
 ### Start
 
-Start Inview Detection to initialize animations, useful when `autoStart` is set to `false`.
+Start Inview Detection to initialise animations, useful when `autoStart` is set to `false`.
 
 ```js
 inview.start()
@@ -282,7 +283,7 @@ Update ScrollTrigger calculations, useful if the page height changes.
 inview.refresh()
 ```
 
-### Stop
+### Stop and fetch
 
 Stop all animations and remove the ScrollTrigger instances.
 
@@ -291,7 +292,6 @@ Stop all animations and remove the ScrollTrigger instances.
 inview.stop()
 
 /* Stop a specific animation */
-// Fetch the element
 const element = document.querySelector('#myElement')
 const trigger = inview.fetch(element)
 inview.stop(trigger)
