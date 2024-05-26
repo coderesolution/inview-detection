@@ -69,7 +69,6 @@
 		}
 	],
 	"dependencies": {
-		"@studio-freight/lenis": "^1.0.28",
 		"gsap": "npm:@gsap/shockingly@^3.12.5"
 	}
 }

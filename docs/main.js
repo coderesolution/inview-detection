@@ -1,7 +1,6 @@
 // Vendors
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Lenis from '@studio-freight/lenis'
 
 // Main script
 import InviewDetection from '../src/index'
