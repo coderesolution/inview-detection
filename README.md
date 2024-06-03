@@ -1,3 +1,5 @@
+![InView Detection](https://coderesolution.com/misc/inview.jpg)
+
 # Inview Detection
 
 Inview Detection enables the creation of sequential animations based on in-view detection using custom `data-inview-*` attributes in the DOM. Powered by GSAP.
