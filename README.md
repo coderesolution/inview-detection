@@ -1,6 +1,8 @@
 # Inview Detection
 
-Inview Detection enables the creation of sequential animations based on in-view detection. Powered by GSAP.
+Inview Detection enables the creation of sequential animations based on in-view detection using custom `data-inview-*` attributes in the DOM. Powered by GSAP.
+
+[Walk-through video](https://cloud.cdrs.dev/h6BvSP9P)
 
 <a href="https://www.npmjs.com/package/inview-detection"><img src="https://img.shields.io/npm/v/inview-detection?color=red" alt="NPM Version"></a>
 <a href="LICENSE"><img src="https://img.shields.io/github/license/coderesolution/inview-detection?color=orange" alt="Licence"></a>
