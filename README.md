@@ -180,13 +180,16 @@ All options:
 
 Apply any of the following data attributes in conjunction with `[data-inview]` to enable custom animations.
 
--   `scope` for scoped elements within parent
--   `child` for child elements that should animate with parent
--   `debug` for enabling debugging markers and logs
--   `order` for specifying the order of animation
--   `repeat` for allowing repeat animations
--   `from` for setting animation from properties
--   `to` for setting animation to properties
+-   [scope](#scope)
+-   [child](#child)
+-   [debug](#debug)
+-   [order](#order)
+-   [repeat](#repeat)
+-   [from/to](#fromto)
+-   [start](#start)
+-   [end](#end)
+-   [screen](#screen)
+-   [call](#call)
 
 ### Scope
 
@@ -259,6 +262,74 @@ Specify custom `gsap.from()` and `gsap.to()` properties for animations.
 <div data-inview data-inview-from='{"opacity": 0, "y": 20}' data-inview-to='{"opacity": 1, "y": 0}'>
 	Custom Animation
 </div>
+```
+
+### Start
+
+Attribute: `data-inview-start`
+Default: `'top bottom'` or `'top top'` if (sticky)[#sticky] is set
+Type: `str`
+
+Adjust the point when the animation begins.
+
+The first value refers to the trigger and the second value refers to the viewport. Refer GSAP ScrollTrigger documentation for further information.
+
+```html
+<div data-inview data-inview-start="top bottom+=200">
+	<!-- Start 200px after the bottom of the viewport reaches the top of the trigger -->
+</div>
+
+<div data-inview data-inview-start="center center">
+	<!-- Start when the center of the viewport reaches the center of the trigger -->
+</div>
+```
+
+### End
+
+Attribute: `data-inview-end`
+Default: `'bottom top'` or `bottom bottom` if (sticky)[#sticky] is set
+Type: `str`
+
+Adjust the point when the animation ends. See [preset](#preset) for automatic detection with offsets.
+
+The first value refers to the trigger and the second value refers to the viewport. Refer GSAP ScrollTrigger documentation for further information.
+
+```html
+<div data-inview data-inview-end="bottom top+=200">
+	<!-- End 200px before the top of the viewport reaches the bottom of the trigger -->
+</div>
+
+<div data-inview data-inview-end="center center">
+	<!-- End when the center of the viewport reaches the center of the trigger -->
+</div>
+```
+
+### Screen
+
+Attribute: `data-inview-screen`
+Default: `'(min-width: 1025px)'` (configurable globally via [options](#options))
+Type: `str`
+
+Set screen size conditions for the animation. For example: animate on desktop and not mobile, or vice-versa. Expects media queries like `(min-width: 500px)` or `(min-width: 768px) and (max-width: 1000px)` etc. Set to `all` to animate on all screen sizes.
+
+### Call
+
+Attribute: `data-inview-call`
+Default: Not set
+Type: `str`
+
+Fire custom JavaScript events when elements enter and leave the viewport.
+Data such as `target`, `direction` (up/down) and `when` (enter, re-enter, leave and leave-again) are accessible within an event listener.
+
+```html
+<div data-inview data-inview-call="inviewEvent">Trigger</div>
+```
+
+```js
+window.addEventListener('inviewEvent', (e) => {
+	const { target, direction, when } = e.detail
+	console.log(`target: ${target}`, `direction: ${direction}`, `when: ${when}`)
+})
 ```
 
 ## Methods
