@@ -67,8 +67,5 @@
 			"limit": "2 kB",
 			"path": "dist/index.mjs"
 		}
-	],
-	"dependencies": {
-		"gsap": "npm:@gsap/shockingly@^3.12.5"
-	}
+	]
 }

@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      gsap:
-        specifier: npm:@gsap/shockingly@^3.12.5
-        version: '@gsap/shockingly@3.12.5'
     devDependencies:
       '@size-limit/preset-small-lib':
         specifier: ^11.1.4
@@ -988,9 +984,6 @@ packages:
   '@eslint/js@9.3.0':
     resolution: {integrity: sha512-niBqk8iwv96+yuTwjM6bWg8ovzAPF9qkICsGtcoa5/dmqcEMfdwNAX7+/OHcJHc7wj7XqPxH98oAHytFYlw6Sw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@gsap/shockingly@3.12.5':
-    resolution: {integrity: sha512-JoZp6iYvOC+wkwl8zfXSqSrYCcuzTntaULCL08YMa1vonrYcr9D0K3EUe9PNpw7FYK1chjSwjjgcw3zS/O2SWg==}
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -4304,8 +4297,6 @@ snapshots:
       - supports-color
 
   '@eslint/js@9.3.0': {}
-
-  '@gsap/shockingly@3.12.5': {}
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:

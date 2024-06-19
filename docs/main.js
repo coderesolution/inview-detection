@@ -1,12 +1,5 @@
-// Vendors
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
 // Main script
 import InviewDetection from '../src/index'
-
-// Demo CSS
-import './index.css'
 
 // Register GSAP and plugins
 gsap.registerPlugin(ScrollTrigger)
