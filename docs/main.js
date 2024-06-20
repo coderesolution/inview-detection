@@ -1,5 +1,5 @@
 // Main script
-import InviewDetection from '../src/index'
+// import InviewDetection from '../src/index'
 
 // Register GSAP and plugins
 gsap.registerPlugin(ScrollTrigger)

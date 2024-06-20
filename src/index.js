@@ -228,7 +228,7 @@ export default class InviewDetection {
 									detail: {
 										target: parent,
 									},
-								})
+								}),
 							)
 						}
 
@@ -314,7 +314,7 @@ export default class InviewDetection {
 							delay: parent.dataset.inviewDelay || this.getOption('delay'),
 							ease: parent.dataset.inviewEase || this.getOption('ease'),
 						},
-						currentTime
+						currentTime,
 					)
 
 					// Increase the current time position by the stagger time for the next animation
@@ -335,7 +335,7 @@ export default class InviewDetection {
 				animatedElementsList,
 				animationFromPropertiesArray,
 				animationToPropertiesArray,
-				index
+				index,
 			)
 		}
 	}
@@ -399,3 +399,5 @@ export default class InviewDetection {
 		}
 	}
 }
+
+window.InviewDetection = InviewDetection
