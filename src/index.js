@@ -274,6 +274,9 @@ export default class InviewDetection {
 
 			timeline.hasPlayed = false
 
+			// Store the ScrollTrigger instance
+			this.triggers.push(timeline.scrollTrigger)
+
 			// Initialise a variable to hold the current time position on the timeline
 			let currentTime = 0
 
@@ -371,10 +374,10 @@ export default class InviewDetection {
 	stop() {
 		// Kill ScrollTrigger instances created in this script
 		this.triggers.forEach((st) => st.kill())
+		this.triggers = [] // Clear the triggers array
 
 		// Kill all animations
 		const allElements = this._gsap.utils.toArray(this.getOption('elements')).concat(this.animatedElementsList)
-
 		allElements.forEach((element) => {
 			this._gsap.killTweensOf(element)
 		})
